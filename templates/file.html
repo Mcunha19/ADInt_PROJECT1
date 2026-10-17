@@ -1,0 +1,7 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+    <div>
+        <p>{{ context.files[0].filename }} was downloaded {{ context.files[0].download_count }} times.</p>
+    </div>
+{% endblock %}

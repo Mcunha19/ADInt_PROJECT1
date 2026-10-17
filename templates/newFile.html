@@ -1,0 +1,15 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+    <div>
+   <form action="newFile" method="post">
+    File Name: 
+    <textarea id="fileName" name="fileName" rows="1" cols="12"></textarea>
+
+    <p>File Content:</p>
+    <textarea id="fileContent" name="fileContent" rows="12" cols="35"></textarea>
+    <p> press the submit button to store the file on the server</p>
+   <input type="submit">
+</form>
+    </div>
+    {% endblock %}

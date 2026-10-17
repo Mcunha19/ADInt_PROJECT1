@@ -1,0 +1,18 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<h3> List of Files</h3>
+
+<ul>
+    {% for folder in context.folders %}
+        <li><a href="/listFiles{{ context.directory }}/{{ folder }}">{{ folder }}</a></li>
+    {% endfor %}
+    {% for file in context.files %}
+        <li><a href="/getFile{{ context.directory }}/{{ file.filename }}">{{ file.filename }} ({{ file.download_count }} downloads)</a></li>
+    {% endfor %}
+    {% if context.returnable %}
+        <li><a href="/listFiles{{ context.parent_directory }}">RETURN</a></li>
+    {% endif %}
+</ul>
+
+{% endblock %}
