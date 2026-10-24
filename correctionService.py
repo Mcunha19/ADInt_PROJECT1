@@ -23,32 +23,32 @@ Base = declarative_base()
 #Declaration of data
 class ProfessorAssignment(Base):
     __tablename__ = 'professor_assignment'
-    id = Column(String, primary_key=True)
-    prof_id = Column(String)
-    exam_id = Column(String)
-    question_number = Column(String)
+    id = Column(Integer, primary_key=True)
+    prof_id = Column(Integer)
+    exam_id = Column(Integer)
+    question_number = Column(Integer)
     def __repr__(self):
-        return "<ProfessorAssignment(id=%s prof_id='%s', exam_id='%s', question_number='%s')>" % (
+        return "<ProfessorAssignment(id=%d prof_id='%d', exam_id='%d', question_number='%d')>" % (
                                 self.id, self.prof_id, self.exam_id, self.question_number)
 
 class ExamCorrectionPdfs(Base):
     __tablename__ = 'exam_correction_pdfs'
-    id = Column(String, primary_key=True)
-    exam_id = Column(String)
-    pdf_file = Column(String)
+    id = Column(Integer, primary_key=True)
+    exam_id = Column(Integer)
+    resolutionpdf_file = Column(String)
     def __repr__(self):
-        return "<ExamCorrectionPdfs(id=%s exam_id='%s', pdf_file='%s')>" % (
+        return "<ExamCorrectionPdfs(id=%d exam_id='%d', pdf_file='%s')>" % (
                                 self.id, self.exam_id, self.pdf_file)
 
 class QuestionCorrection(Base):
     __tablename__ = 'question_correction'
-    id = Column(String, primary_key=True)
+    id = Column(Integer, primary_key=True)
     exam_correction_pdfs = Column(String)
     page_pdf_file = Column(String)
     evaluated = Column(Boolean)
     grade = Column(Float)
     def __repr__(self):
-        return "<QuestionCorrection(id=%s exam_correction_pdfs='%s', page_pdf_file='%s', evaluated=%d, grade=%f)>" % (
+        return "<QuestionCorrection(id=%d exam_correction_pdfs='%s', page_pdf_file='%s', evaluated=%d, grade=%f)>" % (
                                 self.id, self.exam_correction_pdfs, self.page_pdf_file, self.evaluated, self.grade)
 
 def newUser(name, password, role):

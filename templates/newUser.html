@@ -1,0 +1,14 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+    <div>
+        <form action="addUser" method="post">
+            User Name: 
+            <textarea id="name" name="name" rows="1" cols="20"></textarea>
+            <textarea id="password" name="password" rows="1" cols="20"></textarea>
+            <textarea id="role" name="role" rows="1" cols="20"></textarea>
+            <p> press the submit button to store the user on the server</p>
+            <input type="submit">
+        </form>
+    </div>
+{% endblock %}

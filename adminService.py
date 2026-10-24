@@ -1,3 +1,4 @@
+from huggingface_hub import User
 from sqlalchemy import create_engine
 #from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import declarative_base
@@ -6,7 +7,9 @@ from sqlalchemy import ForeignKey
 from sqlalchemy.orm import relationship
 
 import datetime
-from sqlalchemy.orm import sessionmaker
+from sqla
+
+from userService import Userlchemy.orm import sessionmaker
 import os
 
 #SLQ access layer initialization
@@ -21,26 +24,51 @@ engine = create_engine('sqlite:///%s'%(DATABASE_FILE), echo=False) #echo = True 
 Base = declarative_base()
 
 #Declaration of data
-class User(Base):
-    __tablename__ = 'user'
-    id = Column(String, primary_key=True)
-    name = Column(String)
-    password = Column(String)
-    role = Column(String)
+class Exam(Base):
+    __tablename__ = 'exam'
+    id = Column(Integer, primary_key=True)
+    date = Column(DateTime)
+    course = Column(String)
     def __repr__(self):
-        return "<User(id=%s name='%s', password='%s', role='%s')>" % (
-                                self.id, self.name, self.password, self.role)
+        return "<Exam(id=%d date='%s', course='%s')>" % (
+                                self.id, self.date, self.course)
 
-def newUser(name, password, role):
-    user = User(name = name, password = password, role = role)
-    session.add(user)
+def newExam(date, course):
+    exam = Exam(date = date, course = course)
+    session.add(exam)
     session.commit()
 
-def listUsers():
-    return session.query(User).all()
+def listExams():
+    return session.query(Exam).all()
 
-def getUsersByRole(role):
-    return session.query(User).filter(User.role == role).all()
+def getExamsByDate(date):
+    return session.query(Exam).filter(Exam.date == date).all()
+
+def getExamsByCourse(course):
+    return session.query(Exam).filter(Exam.course == course).all()
+
+class EnrolledStudent(Base):
+    __tablename__ = 'enrolled_student'
+    id = Column(Integer, primary_key=True)
+    user_id = Column(Integer, ForeignKey('user.id'))
+    exam_id = Column(Integer, ForeignKey('exam.id'))
+    def __repr__(self):
+        return "<EnrolledStudent(id=%d user_id=%d exam_id=%d)>" % (
+                                self.id, self.user_id, self.exam_id)
+
+def newExam(date, course):
+    exam = Exam(date = date, course = course)
+    session.add(exam)
+    session.commit()
+
+def listExams():
+    return session.query(Exam).all()
+
+def getExamsByDate(date):
+    return session.query(Exam).filter(Exam.date == date).all()
+
+def getExamsByCourse(course):
+    return session.query(Exam).filter(Exam.course == course).all()
 
 
 Base.metadata.create_all(engine) #Create tables for the data models

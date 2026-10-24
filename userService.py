@@ -23,12 +23,12 @@ Base = declarative_base()
 #Declaration of data
 class User(Base):
     __tablename__ = 'user'
-    id = Column(String, primary_key=True)
+    id = Column(Integer, primary_key=True)
     name = Column(String)
     password = Column(String)
     role = Column(String)
     def __repr__(self):
-        return "<User(id=%s name='%s', password='%s', role='%s')>" % (
+        return "<User(id=%d name='%s', password='%s', role='%s')>" % (
                                 self.id, self.name, self.password, self.role)
 
 def newUser(name, password, role):
@@ -48,132 +48,39 @@ Base.metadata.create_all(engine) #Create tables for the data models
 Session = sessionmaker(bind=engine)
 session = Session()
 
-from flask import Flask, jsonify, render_template, request, send_from_directory
+from flask import Flask, json, jsonify, render_template, request, send_from_directory
 app = Flask(__name__)
      
 @app.route("/")
 def index():
     return render_template("index.html", message="Dynamic content!")   
 
-@app.route("/listFiles", defaults={'directory': ''})
-@app.route("/listFiles/<path:directory>")
-def listFiles(directory):
-    # TODO 1
-    #get dir listing
-    returnable = False
-    parent_directory = ''
-    if directory != '':
-        directory = '/' + directory
-        parent_directory = os.path.dirname(directory)
-        returnable = True
-    if parent_directory == '/':
-        parent_directory = ''
+@app.route("/listUsers", methods=['GET'])
+def listUsers():
+    users = session.query(User).all()
+    return render_template("listUsers.html", users=users)
 
-    files = [f for f in os.listdir(f"./files{directory}") if os.path.isfile(os.path.join(f"./files{directory}", f))]
-    context = {
-        "files": [],
-        "folders": [f for f in os.listdir(f"./files{directory}") if os.path.isdir(os.path.join(f"./files{directory}", f))],
-        "directory": directory,
-        "parent_directory": parent_directory,
-        "returnable": returnable
-    }
-
-    for file in files:
-        context["files"].append({
-            "filename": file,
-            "download_count": getDownloadCountByFileName(file)
-        })
-    print(context)
-    return render_template("listFiles.html", context=context) 
-
-@app.route('/getFile/<path:filename>')
-def getFile(filename):
-    #TODO 3
-    # file verification
-    FOLDER=os.path.join("./files", filename)
-    if not os.path.exists(FOLDER) or not os.path.isfile(FOLDER):
-        return render_template("error.html", file=filename)
-
-    newDownload(file_name=filename, download_date=datetime.datetime.now(), ip_address=request.remote_addr)
-
-    #TODO 5
-    # send file
-    return send_from_directory("./files", filename, as_attachment=True)
-
-# TODO 4
-# redirected page
-
-
-@app.route("/newFile", methods=['GET', 'POST'])
-def newFileForm():
-    #TODO 6
-    #createFile
-
+@app.route("/addUser", methods=['GET', 'POST'])
+def addUser():
     if request.method == 'POST':
-        filename = request.form['fileName']
-        content = request.form['fileContent']
+        name = request.form['name']
+        password = request.form['password']
+        role = request.form['role']
+        newUser(name, password, role)
+    return render_template("addUser.html")
 
-        with open(os.path.join("./files", filename), 'w') as f:
-            f.write(content)
-
-    return render_template("newFile.html")
-
-
-#TODO 7
-#upload files
-
-@app.route("/uploadFile", methods=['GET', 'POST'])
-def uploadFileForm():
+@app.route("/addUserBulk", methods=['GET', 'POST'])
+def addUserBulk():
     if request.method == 'POST':
-        file = request.files['file']
-        print(type(file))
-
-        file.save(os.path.join("./files", file.filename))
-
-    return render_template("uploadFile.html")
-
-
-# TODO 8
-#/files
-
-@app.route("/files")
-def files():
-    return jsonify(os.listdir("./files"))
-
-
-@app.route('/downloads/<path:filename>')
-def getFileDownloads(filename):
-    FOLDER=os.path.join("./files", filename)
-    if not os.path.exists(FOLDER) or not os.path.isfile(FOLDER):
-        return render_template("error.html", file=filename)
-
-    context = {
-        'files': [
-            {
-                'filename': filename,
-                'download_count': getDownloadCountByFileName(filename)
-            }
-        ]
-    }
-
-    return render_template("file.html", context=context)
-
-@app.route('/downloads/json/<path:filename>')
-def getFileDownloadsJson(filename):
-    FOLDER=os.path.join("./files", filename)
-    if not os.path.exists(FOLDER) or not os.path.isfile(FOLDER):
-        return render_template("error.html", file=filename)
-
-    context = {
-        'files': [
-            {
-                'filename': filename,
-                'download_count': getDownloadCountByFileName(filename)
-            }
-        ]
-    }
-
-    return context
+        try:
+            data = json.loads(request.form["listOfUsers"])
+            if not isinstance(data, list):
+                raise ValueError
+            for item in data:
+                newUser(item["name"], item["password"], item["role"])
+        except (ValueError, KeyError, TypeError):
+            return "JSON inválido: esperado uma lista de utilizadores.", 400
+    return render_template("addUserBulk.html")
 
 
 if __name__ == "__main__":
