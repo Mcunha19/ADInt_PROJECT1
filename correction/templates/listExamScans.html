@@ -1,0 +1,28 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<h1 class="h3 mb-3">Exam scans and corrections</h1>
+<div class="table-responsive">
+    <table class="table table-striped align-middle">
+        <thead><tr><th>Exam</th><th>Page</th><th>Question</th><th>Correction</th><th>Grade</th><th>Scans</th></tr></thead>
+        <tbody>
+        {% for item in questions %}
+            <tr>
+                <td>{{ item.exam_pdf.exam_id }}</td>
+                <td>{{ item.page_number }}</td>
+                <td>{{ item.question_number }}</td>
+                <td>{{ 'Available' if item.evaluated else 'Pending' }}</td>
+                <td>{{ item.grade if item.evaluated else '—' }}</td>
+                <td class="text-nowrap">
+                    <a href="{{ url_for('original_page', correction_id=item.id) }}">Original</a>
+                    <span class="text-secondary">|</span>
+                    <a href="{{ url_for('correction_page', correction_id=item.id) }}">Correction view</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr><td colspan="6" class="text-secondary">No exam scans available.</td></tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

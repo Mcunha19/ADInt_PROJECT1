@@ -1,0 +1,12 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<h3> List of Enrolled Students</h3>
+
+<ul>
+    {% for enrolled_student in enrolled_students %}
+        <li>{{ enrolled_student.user_id }} - {{ enrolled_student.exam.course }}</li>
+    {% endfor %}
+</ul>
+
+{% endblock %}

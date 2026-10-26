@@ -1,0 +1,66 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+    <div class="container py-4">
+        <h1 class="h3 mb-3">Enroll students in an exam</h1>
+        <form action="addBulkEnrolledStudents" method="post" id="bulk-enrollment-form">
+            <div id="enrollment-rows">
+                <div class="row g-2 align-items-end enrollment-row mb-3">
+                    <div class="col-sm-5">
+                        <label class="form-label">Student ID</label>
+                        <input class="form-control" type="number" name="user_id" min="1" step="1" required>
+                    </div>
+                    <div class="col-sm-5">
+                        <label class="form-label">Exam ID</label>
+                        <input class="form-control" type="number" name="exam_id" min="1" step="1" required>
+                    </div>
+                    <div class="col-sm-2">
+                        <button class="btn btn-outline-danger remove-row" type="button" aria-label="Remove student">Remove</button>
+                    </div>
+                </div>
+            </div>
+            <input type="hidden" name="listOfEnrolledStudents" id="list-of-enrolled-students">
+            <div class="d-flex gap-2">
+                <button class="btn btn-outline-primary" type="button" id="add-row">Add student</button>
+                <button class="btn btn-primary" type="submit">Enroll students</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        const rows = document.getElementById('enrollment-rows');
+        const form = document.getElementById('bulk-enrollment-form');
+        const updateRemoveButtons = () => {
+            const removeButtons = rows.querySelectorAll('.remove-row');
+            removeButtons.forEach((button) => {
+                button.disabled = removeButtons.length === 1;
+            });
+        };
+
+        document.getElementById('add-row').addEventListener('click', () => {
+            const newRow = rows.querySelector('.enrollment-row').cloneNode(true);
+            newRow.querySelectorAll('input').forEach((input) => {
+                input.value = '';
+            });
+            rows.appendChild(newRow);
+            updateRemoveButtons();
+        });
+
+        rows.addEventListener('click', (event) => {
+            if (event.target.matches('.remove-row')) {
+                event.target.closest('.enrollment-row').remove();
+                updateRemoveButtons();
+            }
+        });
+
+        form.addEventListener('submit', () => {
+            const enrollments = [...rows.querySelectorAll('.enrollment-row')].map((row) => ({
+                user_id: Number(row.querySelector('[name="user_id"]').value),
+                exam_id: Number(row.querySelector('[name="exam_id"]').value),
+            }));
+            document.getElementById('list-of-enrolled-students').value = JSON.stringify(enrollments);
+        });
+
+        updateRemoveButtons();
+    </script>
+{% endblock %}

@@ -1,15 +1,12 @@
-from huggingface_hub import User
 from sqlalchemy import create_engine
 #from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import declarative_base
-from sqlalchemy import Column, Integer, String, DateTime
+from sqlalchemy import Column, Integer, String, DateTime, Boolean, Float
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import relationship
 
 import datetime
-from sqla
-
-from userService import Userlchemy.orm import sessionmaker
+from sqlalchemy.orm import sessionmaker
 import os
 
 #SLQ access layer initialization
@@ -24,51 +21,46 @@ engine = create_engine('sqlite:///%s'%(DATABASE_FILE), echo=False) #echo = True 
 Base = declarative_base()
 
 #Declaration of data
-class Exam(Base):
-    __tablename__ = 'exam'
+class ProfessorAssignment(Base):
+    __tablename__ = 'professor_assignment'
     id = Column(Integer, primary_key=True)
-    date = Column(DateTime)
-    course = Column(String)
+    prof_id = Column(Integer)
+    exam_id = Column(Integer)
+    question_number = Column(Integer)
     def __repr__(self):
-        return "<Exam(id=%d date='%s', course='%s')>" % (
-                                self.id, self.date, self.course)
+        return "<ProfessorAssignment(id=%d prof_id='%d', exam_id='%d', question_number='%d')>" % (
+                                self.id, self.prof_id, self.exam_id, self.question_number)
 
-def newExam(date, course):
-    exam = Exam(date = date, course = course)
-    session.add(exam)
+class ExamCorrectionPdfs(Base):
+    __tablename__ = 'exam_correction_pdfs'
+    id = Column(Integer, primary_key=True)
+    exam_id = Column(Integer)
+    resolutionpdf_file = Column(String)
+    def __repr__(self):
+        return "<ExamCorrectionPdfs(id=%d exam_id='%d', pdf_file='%s')>" % (
+                                self.id, self.exam_id, self.pdf_file)
+
+class QuestionCorrection(Base):
+    __tablename__ = 'question_correction'
+    id = Column(Integer, primary_key=True)
+    exam_correction_pdfs = Column(String)
+    page_pdf_file = Column(String)
+    evaluated = Column(Boolean)
+    grade = Column(Float)
+    def __repr__(self):
+        return "<QuestionCorrection(id=%d exam_correction_pdfs='%s', page_pdf_file='%s', evaluated=%d, grade=%f)>" % (
+                                self.id, self.exam_correction_pdfs, self.page_pdf_file, self.evaluated, self.grade)
+
+def newUser(name, password, role):
+    user = User(name = name, password = password, role = role)
+    session.add(user)
     session.commit()
 
-def listExams():
-    return session.query(Exam).all()
+def listUsers():
+    return session.query(User).all()
 
-def getExamsByDate(date):
-    return session.query(Exam).filter(Exam.date == date).all()
-
-def getExamsByCourse(course):
-    return session.query(Exam).filter(Exam.course == course).all()
-
-class EnrolledStudent(Base):
-    __tablename__ = 'enrolled_student'
-    id = Column(Integer, primary_key=True)
-    user_id = Column(Integer, ForeignKey('user.id'))
-    exam_id = Column(Integer, ForeignKey('exam.id'))
-    def __repr__(self):
-        return "<EnrolledStudent(id=%d user_id=%d exam_id=%d)>" % (
-                                self.id, self.user_id, self.exam_id)
-
-def newExam(date, course):
-    exam = Exam(date = date, course = course)
-    session.add(exam)
-    session.commit()
-
-def listExams():
-    return session.query(Exam).all()
-
-def getExamsByDate(date):
-    return session.query(Exam).filter(Exam.date == date).all()
-
-def getExamsByCourse(course):
-    return session.query(Exam).filter(Exam.course == course).all()
+def getUsersByRole(role):
+    return session.query(User).filter(User.role == role).all()
 
 
 Base.metadata.create_all(engine) #Create tables for the data models
@@ -82,37 +74,6 @@ app = Flask(__name__)
 @app.route("/")
 def index():
     return render_template("index.html", message="Dynamic content!")   
-
-@app.route("/listFiles", defaults={'directory': ''})
-@app.route("/listFiles/<path:directory>")
-def listFiles(directory):
-    # TODO 1
-    #get dir listing
-    returnable = False
-    parent_directory = ''
-    if directory != '':
-        directory = '/' + directory
-        parent_directory = os.path.dirname(directory)
-        returnable = True
-    if parent_directory == '/':
-        parent_directory = ''
-
-    files = [f for f in os.listdir(f"./files{directory}") if os.path.isfile(os.path.join(f"./files{directory}", f))]
-    context = {
-        "files": [],
-        "folders": [f for f in os.listdir(f"./files{directory}") if os.path.isdir(os.path.join(f"./files{directory}", f))],
-        "directory": directory,
-        "parent_directory": parent_directory,
-        "returnable": returnable
-    }
-
-    for file in files:
-        context["files"].append({
-            "filename": file,
-            "download_count": getDownloadCountByFileName(file)
-        })
-    print(context)
-    return render_template("listFiles.html", context=context) 
 
 @app.route('/getFile/<path:filename>')
 def getFile(filename):
@@ -128,10 +89,6 @@ def getFile(filename):
     # send file
     return send_from_directory("./files", filename, as_attachment=True)
 
-# TODO 4
-# redirected page
-
-
 @app.route("/newFile", methods=['GET', 'POST'])
 def newFileForm():
     #TODO 6
@@ -146,10 +103,6 @@ def newFileForm():
 
     return render_template("newFile.html")
 
-
-#TODO 7
-#upload files
-
 @app.route("/uploadFile", methods=['GET', 'POST'])
 def uploadFileForm():
     if request.method == 'POST':
@@ -158,11 +111,7 @@ def uploadFileForm():
 
         file.save(os.path.join("./files", file.filename))
 
-    return render_template("uploadFile.html")
-
-
-# TODO 8
-#/files
+    return render_template("uploadExamResolution.html")
 
 @app.route("/files")
 def files():

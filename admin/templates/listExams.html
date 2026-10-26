@@ -1,0 +1,12 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<h3> List of Exams</h3>
+
+<ul>
+    {% for exam in exams %}
+        <li>{{ exam.course }} ({{ exam.date }})</li>
+    {% endfor %}
+</ul>
+
+{% endblock %}

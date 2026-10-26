@@ -69,8 +69,8 @@ def addUser():
         newUser(name, password, role)
     return render_template("addUser.html")
 
-@app.route("/addUserBulk", methods=['GET', 'POST'])
-def addUserBulk():
+@app.route("/addBulkUsers", methods=['GET', 'POST'])
+def addBulkUsers():
     if request.method == 'POST':
         try:
             data = json.loads(request.form["listOfUsers"])
@@ -79,8 +79,8 @@ def addUserBulk():
             for item in data:
                 newUser(item["name"], item["password"], item["role"])
         except (ValueError, KeyError, TypeError):
-            return "JSON inválido: esperado uma lista de utilizadores.", 400
-    return render_template("addUserBulk.html")
+            return "Invalid JSON: expected a list of users.", 400
+    return render_template("addBulkUsers.html")
 
 
 if __name__ == "__main__":

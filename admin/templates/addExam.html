@@ -1,0 +1,14 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+    <div>
+        <form action="addExam" method="post">
+            Course: 
+            <textarea id="course" name="course" rows="1" cols="20"></textarea><br>
+            Date: 
+            <input type="datetime-local" id="date" name="date" required><br>
+            <p> press the submit button to store the exam on the server</p>
+            <input type="submit">
+        </form>
+    </div>
+{% endblock %}

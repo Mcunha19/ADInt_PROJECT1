@@ -1,0 +1,20 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<h1 class="h3 mb-3">Correct answer</h1>
+<dl class="row">
+    <dt class="col-sm-2">Exam</dt><dd class="col-sm-10">{{ correction.exam_pdf.exam_id }}</dd>
+    <dt class="col-sm-2">Question</dt><dd class="col-sm-10">{{ correction.question_number }}</dd>
+    <dt class="col-sm-2">Page</dt><dd class="col-sm-10">{{ correction.page_number }}</dd>
+    <dt class="col-sm-2">Professor ID</dt><dd class="col-sm-10">{{ professor_id if professor_id is not none else 'Unassigned' }}</dd>
+</dl>
+<iframe class="w-100 border mb-3" style="height: 70vh" src="{{ url_for('correction_page', correction_id=correction.id) }}" title="Anonymized exam page"></iframe>
+<form method="post" class="row g-3 align-items-end">
+    <div class="col-sm-4 col-lg-3">
+        <label class="form-label" for="grade">Grade</label>
+        <input class="form-control" id="grade" name="grade" type="number" min="0" step="any" value="{{ correction.grade if correction.grade is not none else '' }}" required>
+    </div>
+    <div class="col-sm-4"><button class="btn btn-primary" type="submit">Save grade</button></div>
+    <div class="col-sm-4"><a href="{{ url_for('assigned_resolutions') }}">Back to pages</a></div>
+</form>
+{% endblock %}

@@ -1,0 +1,25 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<h1 class="h3 mb-3">Question pages to correct</h1>
+<div class="table-responsive">
+    <table class="table table-striped align-middle">
+        <thead><tr><th>Exam</th><th>Page</th><th>Question</th><th>Professor ID</th><th>Status</th><th></th></tr></thead>
+        <tbody>
+        {% for item in questions %}
+            {% set professor_id = assignments.get((item.exam_pdf.exam_id, item.question_number)) %}
+            <tr>
+                <td>{{ item.exam_pdf.exam_id }}</td>
+                <td>{{ item.page_number }}</td>
+                <td>{{ item.question_number }}</td>
+                <td>{{ professor_id if professor_id is not none else 'Unassigned' }}</td>
+                <td>{{ 'Corrected' if item.evaluated else 'Pending' }}</td>
+                <td><a class="btn btn-sm btn-outline-primary" href="{{ url_for('correct_question', correction_id=item.id) }}">Open page</a></td>
+            </tr>
+        {% else %}
+            <tr><td colspan="6" class="text-secondary">Upload a scan to create question pages.</td></tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
