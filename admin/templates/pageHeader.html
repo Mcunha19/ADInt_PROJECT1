@@ -1,9 +1,13 @@
 
-<div>
-  <ul>
-    <li> <a href="/"> Home</a></li>
-    <li> <a href="/listExams"> List Exams</a></li>
-    <li> <a href="/addExam"> Add Exam</a></li> 
-    <li> <a href="/orderPrintingSheets"> Order Printing Sheets</a></li> 
-  </ul>>
-</div>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="{{ url_for('index') }}">Admin Service</a>
+        <div class="navbar-nav">
+            <a class="nav-link" href="{{ url_for('listExams') }}">Exams</a>
+            <a class="nav-link" href="{{ url_for('addExam') }}">Schedule exam</a>
+            <a class="nav-link" href="{{ url_for('addBulkEnrolledStudents') }}">Enroll students</a>
+            <a class="nav-link" href="{{ url_for('listEnrolledStudents') }}">Enrollments</a>
+            <a class="nav-link" href="{{ url_for('orderPrintingSheets') }}">Print sheets</a>
+        </div>
+    </div>
+</nav>

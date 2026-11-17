@@ -49,7 +49,7 @@ Base.metadata.create_all(engine) #Create tables for the data models
 Session = sessionmaker(bind=engine)
 session = Session()
 
-from flask import Flask, jsonify, render_template, request, send_from_directory
+from flask import Flask, jsonify, render_template, request, send_from_directory, flash
 from flaskext.xmlrpc import XMLRPCHandler
 import generate_resolution_sheets
 app = Flask(__name__)
@@ -83,7 +83,7 @@ def print_resolution_sheets(exam_id, exam_question_count, enrolled_student_count
         merged.save(output_path)
         newResolutionSheet(exam_id, str(output_path))
     except Exception as e:
-        print("Error generating resolution sheets: {}".format(e))
+        flash("Error generating resolution sheets: {}".format(e), "danger")
         output = False
     finally:
         merged.close()

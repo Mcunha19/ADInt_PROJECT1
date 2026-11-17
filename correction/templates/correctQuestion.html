@@ -3,9 +3,8 @@
 {% block content %}
 <h1 class="h3 mb-3">Correct answer</h1>
 <dl class="row">
-    <dt class="col-sm-2">Exam</dt><dd class="col-sm-10">{{ correction.exam_pdf.exam_id }}</dd>
+    <dt class="col-sm-2">Exam</dt><dd class="col-sm-10">{{ correction.exam_correction_pdfs_id }}</dd>
     <dt class="col-sm-2">Question</dt><dd class="col-sm-10">{{ correction.question_number }}</dd>
-    <dt class="col-sm-2">Page</dt><dd class="col-sm-10">{{ correction.page_number }}</dd>
     <dt class="col-sm-2">Professor ID</dt><dd class="col-sm-10">{{ professor_id if professor_id is not none else 'Unassigned' }}</dd>
 </dl>
 <iframe class="w-100 border mb-3" style="height: 70vh" src="{{ url_for('correction_page', correction_id=correction.id) }}" title="Anonymized exam page"></iframe>

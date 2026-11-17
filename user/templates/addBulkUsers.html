@@ -1,0 +1,13 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<h1 class="h3 mb-3">Bulk add users</h1>
+<p class="text-secondary">Upload a CSV with the columns <code>name</code>, <code>password</code>, and <code>role</code>.</p>
+<form action="{{ url_for('addBulkUsers') }}" method="post" enctype="multipart/form-data" class="row g-3" style="max-width: 640px">
+    <div class="col-12">
+        <label class="form-label" for="csv-file">User CSV</label>
+        <input class="form-control" id="csv-file" name="csv_file" type="file" accept=".csv,text/csv" required>
+    </div>
+    <div class="col-12"><button class="btn btn-primary" type="submit">Import users</button></div>
+</form>
+{% endblock %}

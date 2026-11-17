@@ -1,7 +1,11 @@
 {% extends 'layout.html' %}
 
 {% block content %}
-    <div>
-      <p>{{ message }}</p>
-    </div>
-    {% endblock %}
+<h1 class="h3 mb-3">Exam administration</h1>
+<div class="d-flex flex-wrap gap-2">
+    <a class="btn btn-primary" href="{{ url_for('addExam') }}">Schedule exam</a>
+    <a class="btn btn-outline-primary" href="{{ url_for('listExams') }}">View exams</a>
+    <a class="btn btn-outline-secondary" href="{{ url_for('addBulkEnrolledStudents') }}">Enroll students</a>
+    <a class="btn btn-outline-secondary" href="{{ url_for('orderPrintingSheets') }}">Order sheets</a>
+</div>
+{% endblock %}

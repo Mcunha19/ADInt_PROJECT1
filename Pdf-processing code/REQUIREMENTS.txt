@@ -1,5 +1,0 @@
-PyMuPDF
-numpy
-opencv-python
-qrcode
-pillow

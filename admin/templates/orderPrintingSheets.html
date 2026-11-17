@@ -1,17 +1,17 @@
 {% extends 'layout.html' %}
 
 {% block content %}
-    <div class="container py-4">
-        <h1 class="h3 mb-3">Order Printing Sheets</h1>
-        <form action="orderPrintingSheets" method="post" id="printing-form">
-                <div class="row g-2 align-items-end enrollment-row mb-3">
-                    <div class="col-sm-5">
-                        <label class="form-label">Exam ID</label>
-                        <input class="form-control" type="number" name="examId" min="1" step="1" required>
-                    </div>
-                </div>
-                <button class="btn btn-primary" type="submit">Order Printing Sheets</button>
-        </form>
+<h1 class="h3 mb-3">Order resolution sheets</h1>
+<form action="{{ url_for('orderPrintingSheets') }}" method="post" class="row g-3 align-items-end" style="max-width: 640px">
+    <div class="col-sm-8">
+        <label class="form-label" for="exam-id">Exam ID</label>
+        <input class="form-control" id="exam-id" type="number" name="examId" min="1" step="1" required>
     </div>
-
+    <div class="col-sm-4"><button class="btn btn-primary" type="submit">Order sheets</button></div>
+</form>
+{% if printSuccess is defined %}
+    <div class="alert alert-{{ 'success' if printSuccess else 'danger' }} mt-3" role="status">
+        {{ 'Printing order completed.' if printSuccess else 'Printing order failed.' }}
+    </div>
+{% endif %}
 {% endblock %}

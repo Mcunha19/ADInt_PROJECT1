@@ -1,8 +1,11 @@
 
-<div>
-  <ul>
-    <li> <a href="/"> Home</a></li>
-    <li> <a href="/listUsers"> List Users</a></li>
-    <li> <a href="/addUser"> Add User</a></li> 
-  </ul>>
-</div>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="{{ url_for('index') }}">User Service</a>
+        <div class="navbar-nav">
+            <a class="nav-link" href="{{ url_for('listUsers') }}">List Users</a>
+            <a class="nav-link" href="{{ url_for('addUser') }}">Add user</a>
+            <a class="nav-link" href="{{ url_for('addBulkUsers') }}">Bulk add users</a>
+        </div>
+    </div>
+</nav>

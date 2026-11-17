@@ -1,12 +1,21 @@
 {% extends 'layout.html' %}
 
 {% block content %}
-<h3> List of Exams</h3>
-
-<ul>
-    {% for exam in exams %}
-        <li>{{ exam.course }} ({{ exam.date }})</li>
-    {% endfor %}
-</ul>
-
+<h1 class="h3 mb-0">Scheduled exams</h1>
+<div class="table-responsive">
+    <table class="table table-striped align-middle">
+        <thead><tr><th>ID</th><th>Course</th><th>Date and time</th></tr></thead>
+        <tbody>
+        {% for exam in exams %}
+            <tr>
+                <td>{{ exam.id }}</td>
+                <td>{{ exam.course }}</td>
+                <td>{{ exam.date.strftime('%Y-%m-%d %H:%M') if exam.date else '' }}</td>
+            </tr>
+        {% else %}
+            <tr><td colspan="3" class="text-secondary">No exams scheduled.</td></tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
 {% endblock %}

@@ -18,17 +18,16 @@
 <h2 class="h5 mt-4">Uploaded PDFs</h2>
 <div class="table-responsive">
     <table class="table table-striped align-middle">
-        <thead><tr><th>Exam</th><th>Filename</th><th>Uploaded</th><th>Original PDF</th></tr></thead>
+        <thead><tr><th>ID</th><th>Exam ID</th><th>Resolution PDF file</th></tr></thead>
         <tbody>
         {% for pdf in pdfs %}
             <tr>
+                <td>{{ pdf.id }}</td>
                 <td>{{ pdf.exam_id }}</td>
-                <td>{{ pdf.original_filename }}</td>
-                <td>{{ pdf.uploaded_at.strftime('%Y-%m-%d %H:%M') }}</td>
-                <td><a href="{{ url_for('original_exam_pdf', pdf_id=pdf.id) }}">Open scan</a></td>
+                <td>{{ pdf.resolution_pdf_file }}</td>
             </tr>
         {% else %}
-            <tr><td colspan="4" class="text-secondary">No uploaded scans yet.</td></tr>
+            <tr><td colspan="3" class="text-secondary">No uploaded scans yet.</td></tr>
         {% endfor %}
         </tbody>
     </table>

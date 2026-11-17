@@ -1,4 +1,4 @@
-from huggingface_hub import User
+import csv
 from sqlalchemy import create_engine
 #from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import declarative_base, joinedload
@@ -79,14 +79,14 @@ Session = sessionmaker(bind=engine)
 session = Session()
 
 from xmlrpc import client as xmlrpc_client
-from flask import Flask, json, jsonify, render_template, request, send_from_directory
+from flask import Flask, render_template, request
 app = Flask(__name__)
 
 printing_service = xmlrpc_client.ServerProxy("http://localhost:8002/RPC")
      
 @app.route("/")
 def index():
-    return render_template("index.html", message="Dynamic content!")   
+    return render_template("index.html")   
 
 @app.route("/listExams", methods=['GET'])
 def listExams():
@@ -109,14 +109,16 @@ def listEnrolledStudents():
 @app.route("/addBulkEnrolledStudents", methods=['GET', 'POST'])
 def addBulkEnrolledStudents():
     if request.method == 'POST':
-        try:
-            data = json.loads(request.form["listOfEnrolledStudents"])
-            if not isinstance(data, list):
-                raise ValueError
-            for item in data:
-                newEnrolledStudent(item["user_id"], item["exam_id"])
-        except (ValueError, KeyError, TypeError):
-            return "Invalid JSON: expected a list of enrolled students.", 400
+        uploaded_file = request.files["csv_file"]
+        reader = csv.DictReader(uploaded_file.read().decode("utf-8-sig").splitlines())
+        for row in reader:
+            session.add(
+                EnrolledStudent(
+                    user_id=int(row["user_id"]),
+                    exam_id=int(row["exam_id"]),
+                )
+            )
+        session.commit()
     return render_template("addBulkEnrolledStudents.html")
 
 @app.route("/orderPrintingSheets", methods=['GET', 'POST'])

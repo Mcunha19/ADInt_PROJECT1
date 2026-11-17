@@ -29,7 +29,7 @@
         <thead><tr><th>Exam</th><th>Question</th><th>Professor</th></tr></thead>
         <tbody>
         {% for assignment in assignments %}
-            <tr><td>{{ assignment.exam_id }}</td><td>{{ assignment.question_number }}</td><td>{{ assignment.professor_id }}</td></tr>
+            <tr><td>{{ assignment.exam_id }}</td><td>{{ assignment.question_number }}</td><td>{{ assignment.prof_id }}</td></tr>
         {% else %}
             <tr><td colspan="3" class="text-secondary">No assignments yet.</td></tr>
         {% endfor %}

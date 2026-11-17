@@ -1,12 +1,22 @@
 {% extends 'layout.html' %}
 
 {% block content %}
-<h3> List of Enrolled Students</h3>
-
-<ul>
-    {% for enrolled_student in enrolled_students %}
-        <li>{{ enrolled_student.user_id }} - {{ enrolled_student.exam.course }}</li>
-    {% endfor %}
-</ul>
-
+<h1 class="h3 mb-3">Enrolled students</h1>
+<div class="table-responsive">
+    <table class="table table-striped align-middle">
+        <thead><tr><th>Enrollment ID</th><th>Student ID</th><th>Exam ID</th><th>Course</th></tr></thead>
+        <tbody>
+        {% for enrolled_student in enrolled_students %}
+            <tr>
+                <td>{{ enrolled_student.id }}</td>
+                <td>{{ enrolled_student.user_id }}</td>
+                <td>{{ enrolled_student.exam_id }}</td>
+                <td>{{ enrolled_student.exam.course if enrolled_student.exam else '' }}</td>
+            </tr>
+        {% else %}
+            <tr><td colspan="4" class="text-secondary">No enrollments found.</td></tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
 {% endblock %}

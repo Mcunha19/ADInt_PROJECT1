@@ -1,14 +1,16 @@
 {% extends 'layout.html' %}
 
 {% block content %}
-    <div>
-        <form action="addExam" method="post">
-            Course: 
-            <textarea id="course" name="course" rows="1" cols="20"></textarea><br>
-            Date: 
-            <input type="datetime-local" id="date" name="date" required><br>
-            <p> press the submit button to store the exam on the server</p>
-            <input type="submit">
-        </form>
+<h1 class="h3 mb-3">Schedule exam</h1>
+<form action="{{ url_for('addExam') }}" method="post" class="row g-3" style="max-width: 640px">
+    <div class="col-12">
+        <label class="form-label" for="course">Course</label>
+        <input class="form-control" id="course" name="course" type="text" required>
     </div>
+    <div class="col-12">
+        <label class="form-label" for="date">Date and time</label>
+        <input class="form-control" type="datetime-local" id="date" name="date" required>
+    </div>
+    <div class="col-12"><button class="btn btn-primary" type="submit">Save exam</button></div>
+</form>
 {% endblock %}

@@ -1,16 +1,13 @@
+import csv
 from sqlalchemy import create_engine
-#from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import declarative_base
-from sqlalchemy import Column, Integer, String, DateTime
-from sqlalchemy import ForeignKey
-from sqlalchemy.orm import relationship
+from sqlalchemy import Column, Integer, String
 
-import datetime
 from sqlalchemy.orm import sessionmaker
 import os
 
 #SLQ access layer initialization
-DATABASE_FILE = "database.sqlite"
+DATABASE_FILE = "userDB.sqlite"
 db_exists = False
 if os.path.exists(DATABASE_FILE):
     db_exists = True
@@ -48,12 +45,12 @@ Base.metadata.create_all(engine) #Create tables for the data models
 Session = sessionmaker(bind=engine)
 session = Session()
 
-from flask import Flask, json, jsonify, render_template, request, send_from_directory
+from flask import Flask, render_template, request
 app = Flask(__name__)
      
 @app.route("/")
 def index():
-    return render_template("index.html", message="Dynamic content!")   
+    return render_template("index.html")   
 
 @app.route("/listUsers", methods=['GET'])
 def listUsers():
@@ -72,14 +69,11 @@ def addUser():
 @app.route("/addBulkUsers", methods=['GET', 'POST'])
 def addBulkUsers():
     if request.method == 'POST':
-        try:
-            data = json.loads(request.form["listOfUsers"])
-            if not isinstance(data, list):
-                raise ValueError
-            for item in data:
-                newUser(item["name"], item["password"], item["role"])
-        except (ValueError, KeyError, TypeError):
-            return "Invalid JSON: expected a list of users.", 400
+        uploaded_file = request.files["csv_file"]
+        reader = csv.DictReader(uploaded_file.read().decode("utf-8-sig").splitlines())
+        for row in reader:
+            session.add(User(name=row["name"], password=row["password"], role=row["role"]))
+        session.commit()
     return render_template("addBulkUsers.html")
 
 

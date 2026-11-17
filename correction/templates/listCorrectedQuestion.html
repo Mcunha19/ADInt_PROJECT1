@@ -4,18 +4,17 @@
 <h1 class="h3 mb-3">Corrected answers</h1>
 <div class="table-responsive">
     <table class="table table-striped align-middle">
-        <thead><tr><th>Exam</th><th>Page</th><th>Question</th><th>Grade</th><th></th></tr></thead>
+        <thead><tr><th>Exam</th><th>Question</th><th>Grade</th><th></th></tr></thead>
         <tbody>
         {% for item in questions %}
             <tr>
-                <td>{{ item.exam_pdf.exam_id }}</td>
-                <td>{{ item.page_number }}</td>
+                <td>{{ item.exam_correction_pdf_id }}</td>
                 <td>{{ item.question_number }}</td>
                 <td>{{ item.grade }}</td>
                 <td><a href="{{ url_for('correct_question', correction_id=item.id) }}">Review</a></td>
             </tr>
         {% else %}
-            <tr><td colspan="5" class="text-secondary">No answers have been corrected yet.</td></tr>
+                <tr><td colspan="4" class="text-secondary">No answers have been corrected yet.</td></tr>
         {% endfor %}
         </tbody>
     </table>

@@ -1,7 +1,9 @@
 {% extends 'layout.html' %}
 
 {% block content %}
-    <div>
-      <p>{{ message }}</p>
-    </div>
-    {% endblock %}
+<h1 class="h3 mb-3">User administration</h1>
+<div class="d-flex flex-wrap gap-2">
+    <a class="btn btn-primary" href="{{ url_for('listUsers') }}">Users</a>
+    <a class="btn btn-outline-primary" href="{{ url_for('addUser') }}">Add user</a>
+</div>
+{% endblock %}

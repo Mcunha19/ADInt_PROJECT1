@@ -1,16 +1,26 @@
 {% extends 'layout.html' %}
 
 {% block content %}
-    <div>
-        <form action="addUser" method="post">
-            User Name: 
-            <textarea id="name" name="name" rows="1" cols="20"></textarea><br>
-            Password: 
-            <textarea id="password" name="password" rows="1" cols="20"></textarea><br>
-            Role: 
-            <textarea id="role" name="role" rows="1" cols="20"></textarea><br>
-            <p> press the submit button to store the user on the server</p>
-            <input type="submit">
-        </form>
+<h1 class="h3 mb-3">Add user</h1>
+<form action="{{ url_for('addUser') }}" method="post" class="row g-3" style="max-width: 640px">
+    <div class="col-12">
+        <label class="form-label" for="name">Name</label>
+        <input class="form-control" id="name" name="name" type="text" autocomplete="name" required>
     </div>
+    <div class="col-12">
+        <label class="form-label" for="password">Password</label>
+        <input class="form-control" id="password" name="password" type="password" autocomplete="new-password" required>
+    </div>
+    <div class="col-12">
+        <label class="form-label" for="role">Role</label>
+        <select class="form-select" id="role" name="role" required>
+            <option value="" selected disabled>Select a role</option>
+            <option value="Administrator">Administrator</option>
+            <option value="Professor">Professor</option>
+            <option value="Student">Student</option>
+            <option value="Exam Invigilator">Exam invigilator</option>
+        </select>
+    </div>
+    <div class="col-12"><button class="btn btn-primary" type="submit">Save user</button></div>
+</form>
 {% endblock %}

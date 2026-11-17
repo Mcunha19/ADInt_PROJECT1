@@ -1,12 +1,21 @@
 {% extends 'layout.html' %}
 
 {% block content %}
-<h3> List of Resolution Sheets</h3>
-
-<ul>
-    {% for resolution_sheet in resolution_sheets %}
-        <li>{{ resolution_sheet.exam_id }} - {{ resolution_sheet.sheets_pdf_file_name }}</li>
-    {% endfor %}
-</ul>
-
+<h1 class="h3 mb-3">Printed resolution sheets</h1>
+<div class="table-responsive">
+    <table class="table table-striped align-middle">
+        <thead><tr><th>ID</th><th>Exam ID</th><th>PDF file</th></tr></thead>
+        <tbody>
+        {% for resolution_sheet in resolution_sheets %}
+            <tr>
+                <td>{{ resolution_sheet.id }}</td>
+                <td>{{ resolution_sheet.exam_id }}</td>
+                <td>{{ resolution_sheet.sheets_pdf_file_name }}</td>
+            </tr>
+        {% else %}
+            <tr><td colspan="3" class="text-secondary">No resolution sheets have been printed.</td></tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
 {% endblock %}

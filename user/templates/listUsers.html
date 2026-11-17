@@ -1,12 +1,17 @@
 {% extends 'layout.html' %}
 
 {% block content %}
-<h3> List of Users</h3>
-
-<ul>
-    {% for user in users %}
-        <li>{{ user.name }} ({{ user.role }})</li>
-    {% endfor %}
-</ul>
-
+<h1 class="h3 mb-0">Users</h1>
+<div class="table-responsive">
+    <table class="table table-striped align-middle">
+        <thead><tr><th>ID</th><th>Name</th><th>Role</th></tr></thead>
+        <tbody>
+        {% for user in users %}
+            <tr><td>{{ user.id }}</td><td>{{ user.name }}</td><td>{{ user.role }}</td></tr>
+        {% else %}
+            <tr><td colspan="3" class="text-secondary">No users found.</td></tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
 {% endblock %}
